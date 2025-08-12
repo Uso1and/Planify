@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (response.ok) {
                 alert('Регистрация прошла успешно!');
-                window.location.href = '/';
+                window.location.href = '/login';
             } else {
                 errorMessageEl.textContent = data.error || 'Ошибка регистрации';
             }

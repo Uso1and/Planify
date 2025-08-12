@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"planify/internal/app/handlers"
+	"planify/internal/app/middleware"
 	"planify/internal/domain/config"
 	"planify/internal/domain/infrastructure/database"
 	"planify/internal/domain/repo"
@@ -25,13 +26,29 @@ func SetupPubRouter() *gin.Engine {
 	r.LoadHTMLGlob("template/*")
 	r.Static("static", "./static")
 
-	r.GET("/", handlers.MainPageHandler)
+	r.GET("/", handlers.IndexPageHandler)
 
 	r.GET("/signup", handlers.SignUpPageHandler)
 	r.POST("/signup", userHandler.SignUpHandler)
 
 	r.GET("/login", handlers.LoginPageHandler)
 	r.POST("/login", userHandler.LoginHandler)
+
+	protected := r.Group("/")
+	protected.Use(func(c *gin.Context) {
+		// Проверяем токен в URL только для GET запросов
+		if c.Request.Method == "GET" {
+			if token := c.Query("token"); token != "" {
+				c.Request.Header.Set("Authorization", "Bearer "+token)
+			}
+		}
+		c.Next()
+	})
+	protected.Use(middleware.AuthMiddleware(cfg))
+	{
+		protected.GET("/main", handlers.MainPageHandler)
+
+	}
 
 	return r
 
