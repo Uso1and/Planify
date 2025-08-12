@@ -9,7 +9,6 @@ import (
 	"planify/internal/domain/config"
 	"planify/internal/domain/infrastructure/database"
 	"planify/internal/domain/repo"
-
 )
 
 func SetupPubRouter() *gin.Engine {
@@ -30,6 +29,10 @@ func SetupPubRouter() *gin.Engine {
 
 	r.GET("/signup", handlers.SignUpPageHandler)
 	r.POST("/signup", userHandler.SignUpHandler)
+
+	r.GET("/login", handlers.LoginPageHandler)
+	r.POST("/login", userHandler.LoginHandler)
+
 	return r
 
 }
