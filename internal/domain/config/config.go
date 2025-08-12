@@ -5,15 +5,17 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+
 )
 
 type ConfigDB struct {
-	Host     string
-	Port     string
-	User     string
-	Password string
-	Name     string
-	SSLMode  string
+	Host      string
+	Port      string
+	User      string
+	Password  string
+	Name      string
+	SSLMode   string
+	JWTSecret string
 }
 
 func LoadConfig() (*ConfigDB, error) {
@@ -30,6 +32,7 @@ func LoadConfig() (*ConfigDB, error) {
 		Password: getEnv("DB_PASSWORD", ""),
 		Name:     getEnv("DB_NAME", ""),
 		SSLMode:  getEnv("DB_SSLMode", "disable"),
+		JWTSecret: getEnv("JWT_SECRET", "default-secret-key"),
 	}, nil
 }
 
