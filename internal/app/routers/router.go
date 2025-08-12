@@ -10,6 +10,7 @@ import (
 	"planify/internal/domain/config"
 	"planify/internal/domain/infrastructure/database"
 	"planify/internal/domain/repo"
+
 )
 
 func SetupPubRouter() *gin.Engine {
@@ -19,8 +20,10 @@ func SetupPubRouter() *gin.Engine {
 	}
 
 	userRepo := repo.NewUserRepo(database.DB)
+	noteRepo := repo.NewNoteRepo(database.DB)
 
 	userHandler := handlers.NewUserHandler(userRepo, cfg)
+	noteHandler := handlers.NewNoteHandler(noteRepo)
 
 	r := gin.Default()
 	r.LoadHTMLGlob("template/*")
@@ -47,6 +50,9 @@ func SetupPubRouter() *gin.Engine {
 	protected.Use(middleware.AuthMiddleware(cfg))
 	{
 		protected.GET("/main", handlers.MainPageHandler)
+
+		protected.POST("/note", noteHandler.CreateNote)
+
 
 	}
 
