@@ -3,45 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Note Details</title>
-    <style>
-        .note-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .note-actions {
-            margin-top: 20px;
-        }
-        #editTitle, #editCategory {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-        }
-        #editContent {
-            width: 100%;
-            height: 200px;
-            padding: 8px;
-        }
-        #saveNoteBtn {
-            display: none;
-        }
-    </style>
+    <title>Planify - Note</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="note-container">
-        <h1 id="noteTitle"></h1>
-        <div class="note-meta">
-            <p>Category: <span id="noteCategory"></span></p>
-            <p>Created: <span id="noteCreatedAt"></span></p>
-            <p>Last updated: <span id="noteUpdatedAt"></span></p>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="/" class="brand">Planify</a>
+            <div class="nav-links">
+                <button id="logoutBtn" class="btn btn-danger">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
         </div>
-        <div class="note-content" id="noteContent"></div>
-        <div class="note-actions">
-            <button id="editNoteBtn">Edit</button>
-            <button id="saveNoteBtn">Save</button>
-            <button id="deleteNoteBtn">Delete</button>
-            <button id="backBtn">Back to Notes</button>
+    </nav>
+
+    <div class="container">
+        <div class="note-detail">
+            <div class="note-meta">
+                <span class="note-category" id="noteCategory"></span>
+                <span style="float: right;">
+                    Created: <span id="noteCreatedAt"></span> | 
+                    Updated: <span id="noteUpdatedAt"></span>
+                </span>
+            </div>
+            
+            <h1 class="note-detail-title" id="noteTitle"></h1>
+            
+            <div class="note-detail-content" id="noteContent"></div>
+            
+            <div class="note-actions">
+                <button id="editNoteBtn" class="btn">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+                <button id="saveNoteBtn" class="btn btn-primary" style="display: none;">
+                    <i class="fas fa-save"></i> Save
+                </button>
+                <button id="deleteNoteBtn" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+                <button id="backBtn" class="btn">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+            </div>
         </div>
     </div>
 

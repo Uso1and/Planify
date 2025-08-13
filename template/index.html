@@ -3,10 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planify</title>
+    <title>Planify - Home</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <a href="/login">Войти</a>
-    <a href="/signup">Регистрация</a>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="/" class="brand">Planify</a>
+            <div class="nav-links">
+                <a href="/login" class="nav-link">Login</a>
+                <a href="/signup" class="nav-link">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="hero">
+            <h1>Organize Your Thoughts</h1>
+            <p>Planify helps you capture and organize your ideas, tasks, and notes in one place.</p>
+            <div class="cta-buttons">
+                <a href="/signup" class="btn btn-primary">Get Started</a>
+                <a href="/login" class="btn">Login</a>
+            </div>
+        </div>
+    </main>
+
+    <script src="/static/js/auth/login.js"></script>
 </body>
 </html>

@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-    // Загружаем заметки при загрузке страницы
+   
     loadNotes();
 
     logoutBtn.addEventListener('click', function() {
@@ -42,9 +42,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await response.json();
 
             if (response.ok) {
-                alert('Note created successfully!');
+                
+                showNotification('Note created successfully!', 'success');
                 noteForm.reset();
-               
                 loadNotes();
             } else {
                 errorMessageEl.textContent = data.error || 'Failed to create note';
@@ -55,9 +55,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Функция для загрузки заметок
+   
     async function loadNotes() {
         try {
+            notesContainer.innerHTML = '<div class="loading">Loading notes...</div>';
+            
             const response = await fetch('/note', {
                 method: 'GET',
                 headers: {
@@ -74,52 +76,44 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (err) {
             errorMessageEl.textContent = 'Error loading notes';
             console.error('Error loading notes:', err);
+            notesContainer.innerHTML = `<div class="error">Error loading notes: ${err.message}</div>`;
         }
     }
 
-    // Функция для отображения заметок
+   
     function renderNotes(notes) {
         if (!notesContainer) return;
         
-        notesContainer.innerHTML = ''; 
-
         if (!notes || notes.length === 0) {
-            notesContainer.innerHTML = '<p>No notes yet.</p>';
+            notesContainer.innerHTML = '<div class="empty-state">No notes yet. Create your first note!</div>';
             return;
         }
 
+        notesContainer.innerHTML = '';
         notes.forEach(note => {
             const noteElement = document.createElement('div');
-            noteElement.className = 'note';
+            noteElement.className = 'note-card';
             noteElement.innerHTML = `
-                <h3>${note.title || 'No title'}</h3>
-                <p><strong>Category:</strong> ${note.category || 'No category'}</p>
-                <p>${note.content || 'No content'}</p>
-                <p><small>Created: ${new Date(note.created_at).toLocaleString()}</small></p>
+                <span class="note-category">${note.category || 'General'}</span>
+                <h3 class="note-title"><a href="/note/${note.id}/view?token=${token}">${note.title || 'Untitled Note'}</a></h3>
+                <p class="note-content">${note.content || 'No content'}</p>
+                <p class="note-date">Created: ${new Date(note.created_at).toLocaleString()}</p>
             `;
             notesContainer.appendChild(noteElement);
         });
     }
 
-
-    function renderNotes(notes) {
-    notesContainer.innerHTML = '';
-
-    if (!notes || notes.length === 0) {
-        notesContainer.innerHTML = '<p>No notes yet.</p>';
-        return;
+    
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.classList.add('fade-out');
+            setTimeout(() => notification.remove(), 500);
+        }, 3000);
     }
-
-    notes.forEach(note => {
-        const noteElement = document.createElement('div');
-        noteElement.className = 'note';
-        noteElement.innerHTML = `
-            <h3><a href="/note/${note.id}/view?token=${token}">${note.title || 'No title'}</a></h3>
-            <p><strong>Category:</strong> ${note.category || 'No category'}</p>
-            <p>${note.content.length > 100 ? note.content.substring(0, 100) + '...' : note.content || 'No content'}</p>
-            <p><small>Created: ${new Date(note.created_at).toLocaleString()}</small></p>
-        `;
-        notesContainer.appendChild(noteElement);
-    });
-}
 });
