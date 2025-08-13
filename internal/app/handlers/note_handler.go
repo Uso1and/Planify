@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"database/sql"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 
@@ -46,4 +48,26 @@ func (h *NoteHandler) GetNotes(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, notes)
+}
+func (h *NoteHandler) GetNoteByID(c *gin.Context) {
+	userID := c.GetInt("userID")
+	noteID := c.Param("id")
+
+	id, err := strconv.Atoi(noteID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid note ID"})
+		return
+	}
+
+	note, err := h.noteRepo.GetNoteByID(c.Request.Context(), id, userID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(http.StatusNotFound, gin.H{"error": "note not found"})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to get note"})
+		return
+	}
+
+	c.JSON(http.StatusOK, note)
 }

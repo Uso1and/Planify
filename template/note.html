@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Note Details</title>
+    <style>
+        .note-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .note-actions {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="note-container">
+        <h1 id="noteTitle"></h1>
+        <div class="note-meta">
+            <p>Category: <span id="noteCategory"></span></p>
+            <p>Created: <span id="noteCreatedAt"></span></p>
+            <p>Last updated: <span id="noteUpdatedAt"></span></p>
+        </div>
+        <div class="note-content" id="noteContent"></div>
+        <div class="note-actions">
+            <button id="editNoteBtn">Edit</button>
+            <button id="deleteNoteBtn">Delete</button>
+            <button id="backBtn">Back to Notes</button>
+        </div>
+    </div>
+
+    <script src="/static/js/note.js"></script>
+</body>
+</html>

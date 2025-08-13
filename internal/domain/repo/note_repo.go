@@ -10,6 +10,7 @@ import (
 type NoteRepoInterface interface {
 	CreateNewNote(c context.Context, note *models.Note) error
 	GetNotesByUserID(c context.Context, userID int) ([]models.Note, error)
+	GetNoteByID(c context.Context, id int, userID int) (*models.Note, error)
 }
 
 type NoteRepo struct {
@@ -55,4 +56,28 @@ func (r *NoteRepo) GetNotesByUserID(c context.Context, userID int) ([]models.Not
 	}
 
 	return notes, nil
+}
+
+func (r *NoteRepo) GetNoteByID(c context.Context, id int, userID int) (*models.Note, error) {
+
+	query := `SELECT id, user_id, category, title, content, created_at, updated_at FROM notes WHERE id = $1 AND user_id = $2`
+
+	note := &models.Note{}
+
+	err := r.db.QueryRowContext(c, query, id, userID).Scan(
+		&note.ID,
+		&note.UserID,
+		&note.Category,
+		&note.Title,
+		&note.Content,
+		&note.CreatedAt,
+		&note.UpdatedAt,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return note, nil
+
 }

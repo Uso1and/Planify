@@ -48,17 +48,15 @@ func runMigrations(db *sql.DB) error {
 		return fmt.Errorf("failed to create driver: %w", err)
 	}
 
-	// Получаем абсолютный путь к миграциям
 	absPath, err := filepath.Abs("internal/domain/infrastructure/migrations")
 	if err != nil {
 		return fmt.Errorf("failed to get absolute path: %w", err)
 	}
 
-	// Преобразуем путь для формата file://
 	migrationPath := filepath.ToSlash(absPath)
 
 	if runtime.GOOS == "windows" {
-		// Для Windows убираем букву диска
+
 		if len(migrationPath) > 1 && migrationPath[1] == ':' {
 			migrationPath = migrationPath[2:]
 		}
@@ -76,7 +74,6 @@ func runMigrations(db *sql.DB) error {
 	}
 	log.Printf("Found %d migration files", len(files))
 
-	// Запускаем миграции
 	m, err := migrate.NewWithDatabaseInstance(
 		"file://"+migrationPath,
 		"postgres", driver)

@@ -100,4 +100,26 @@ document.addEventListener('DOMContentLoaded', function() {
             notesContainer.appendChild(noteElement);
         });
     }
+
+
+    function renderNotes(notes) {
+    notesContainer.innerHTML = '';
+
+    if (!notes || notes.length === 0) {
+        notesContainer.innerHTML = '<p>No notes yet.</p>';
+        return;
+    }
+
+    notes.forEach(note => {
+        const noteElement = document.createElement('div');
+        noteElement.className = 'note';
+        noteElement.innerHTML = `
+            <h3><a href="/note/${note.id}/view?token=${token}">${note.title || 'No title'}</a></h3>
+            <p><strong>Category:</strong> ${note.category || 'No category'}</p>
+            <p>${note.content.length > 100 ? note.content.substring(0, 100) + '...' : note.content || 'No content'}</p>
+            <p><small>Created: ${new Date(note.created_at).toLocaleString()}</small></p>
+        `;
+        notesContainer.appendChild(noteElement);
+    });
+}
 });
