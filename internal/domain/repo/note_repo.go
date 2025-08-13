@@ -12,6 +12,7 @@ type NoteRepoInterface interface {
 	GetNotesByUserID(c context.Context, userID int) ([]models.Note, error)
 	GetNoteByID(c context.Context, id int, userID int) (*models.Note, error)
 	UpdateNote(c context.Context, note *models.Note) error
+	DeleteNote(c context.Context, noteID, userID int) error
 }
 
 type NoteRepo struct {
@@ -86,5 +87,12 @@ func (r *NoteRepo) GetNoteByID(c context.Context, id int, userID int) (*models.N
 func (r *NoteRepo) UpdateNote(c context.Context, note *models.Note) error {
 	query := `UPDATE notes SET category=$1, title=$2, content=$3, updated_at=NOW() WHERE id=$4 AND user_id=$5`
 	_, err := r.db.ExecContext(c, query, note.Category, note.Title, note.Content, note.ID, note.UserID)
+	return err
+}
+
+func (r *NoteRepo) DeleteNote(c context.Context, noteID, userID int) error {
+	query := `DELETE FROM notes WHERE id=$1 AND user_id=$2`
+
+	_, err := r.db.ExecContext(c, query, noteID, userID)
 	return err
 }

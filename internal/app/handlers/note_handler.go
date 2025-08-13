@@ -97,3 +97,17 @@ func (h *NoteHandler) UpdateNote(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "note Update"})
 }
+
+func (h *NoteHandler) DeleteNote(c *gin.Context) {
+	userID := c.GetInt("userID")
+	noteID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid note ID"})
+		return
+	}
+	if err := h.noteRepo.DeleteNote(c.Request.Context(), noteID, userID); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delite note"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "note delete"})
+}

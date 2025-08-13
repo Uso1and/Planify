@@ -88,8 +88,8 @@ document.addEventListener('DOMContentLoaded', function() {
             editBtn.style.display = 'none';
             saveBtn.style.display = 'inline-block';
         } else {
-            // Возвращаем обратно в режим просмотра
-            location.reload(); // или обновляем данные через API
+           
+            location.reload(); 
         }
     }
 
@@ -124,23 +124,23 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function deleteNote(id) {
-        try {
-            const response = await fetch(`/note/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to delete note');
+    try {
+        const response = await fetch(`/notes/${id}`, {  
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
             }
+        });
 
-            alert('Note deleted successfully');
-            window.location.href = '/main?token=' + token;
-        } catch (err) {
-            alert('Error deleting note: ' + err.message);
-            console.error(err);
+        if (!response.ok) {
+            throw new Error('Failed to delete note');
         }
+
+        alert('Note deleted successfully');
+        window.location.href = '/main?token=' + token;
+    } catch (err) {
+        alert('Error deleting note: ' + err.message);
+        console.error(err);
     }
+}
 });
