@@ -49,6 +49,7 @@ func (h *NoteHandler) GetNotes(c *gin.Context) {
 
 	c.JSON(http.StatusOK, notes)
 }
+
 func (h *NoteHandler) GetNoteByID(c *gin.Context) {
 	userID := c.GetInt("userID")
 	noteID := c.Param("id")
@@ -70,4 +71,29 @@ func (h *NoteHandler) GetNoteByID(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, note)
+}
+
+func (h *NoteHandler) UpdateNote(c *gin.Context) {
+
+	userID := c.GetInt("userID")
+	noteID, err := strconv.Atoi(c.Param("id"))
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid note ID"})
+		return
+	}
+	var note models.Note
+
+	if err := c.ShouldBindJSON(&note); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		return
+	}
+	note.ID = noteID
+	note.UserID = userID
+
+	if err := h.noteRepo.UpdateNote(c.Request.Context(), &note); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error update note"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "note Update"})
 }

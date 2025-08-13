@@ -54,6 +54,7 @@ func SetupPubRouter() *gin.Engine {
 		protected.POST("/note", noteHandler.CreateNote)
 		protected.GET("/note/:id", noteHandler.GetNoteByID)
 		protected.GET("/note/:id/view", handlers.NotePageHandler)
+		protected.PUT("/notes/:id", noteHandler.UpdateNote)
 	}
 
 	return r

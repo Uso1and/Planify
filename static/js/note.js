@@ -5,20 +5,23 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-    // Получаем ID заметки из URL
     const pathParts = window.location.pathname.split('/');
-    const noteId = pathParts[pathParts.length - 2]; // /note/123/view -> 123
+    const noteId = pathParts[pathParts.length - 2];
 
     // Загружаем данные заметки
     loadNote(noteId);
 
-    // Обработчики кнопок
     document.getElementById('backBtn').addEventListener('click', function() {
         window.location.href = '/main?token=' + token;
     });
 
     document.getElementById('editNoteBtn').addEventListener('click', function() {
-        window.location.href = `/note/${noteId}/edit?token=${token}`;
+        // Переключаем режим просмотра/редактирования
+        toggleEditMode(true);
+    });
+
+    document.getElementById('saveNoteBtn').addEventListener('click', function() {
+        updateNote(noteId);
     });
 
     document.getElementById('deleteNoteBtn').addEventListener('click', function() {
@@ -54,6 +57,70 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('noteContent').textContent = note.content || 'No content';
         document.getElementById('noteCreatedAt').textContent = new Date(note.created_at).toLocaleString();
         document.getElementById('noteUpdatedAt').textContent = new Date(note.updated_at).toLocaleString();
+    }
+
+    function toggleEditMode(editMode) {
+        const title = document.getElementById('noteTitle');
+        const category = document.getElementById('noteCategory');
+        const content = document.getElementById('noteContent');
+        const editBtn = document.getElementById('editNoteBtn');
+        const saveBtn = document.getElementById('saveNoteBtn');
+
+        if (editMode) {
+            // Создаем input для редактирования
+            const titleInput = document.createElement('input');
+            titleInput.type = 'text';
+            titleInput.id = 'editTitle';
+            titleInput.value = title.textContent;
+            title.replaceWith(titleInput);
+
+            const categoryInput = document.createElement('input');
+            categoryInput.type = 'text';
+            categoryInput.id = 'editCategory';
+            categoryInput.value = category.textContent;
+            category.replaceWith(categoryInput);
+
+            const contentTextarea = document.createElement('textarea');
+            contentTextarea.id = 'editContent';
+            contentTextarea.value = content.textContent;
+            content.replaceWith(contentTextarea);
+
+            editBtn.style.display = 'none';
+            saveBtn.style.display = 'inline-block';
+        } else {
+            // Возвращаем обратно в режим просмотра
+            location.reload(); // или обновляем данные через API
+        }
+    }
+
+    async function updateNote(id) {
+        try {
+            const updatedNote = {
+                category: document.getElementById('editCategory').value,
+                title: document.getElementById('editTitle').value,
+                content: document.getElementById('editContent').value
+            };
+
+            const response = await fetch(`/notes/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(updatedNote)
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update note');
+            }
+
+            alert('Note updated successfully');
+            toggleEditMode(false);
+            loadNote(id); // Перезагружаем заметку
+        } catch (err) {
+            alert('Error updating note: ' + err.message);
+            console.error(err);
+        }
     }
 
     async function deleteNote(id) {

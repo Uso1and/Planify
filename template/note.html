@@ -13,6 +13,19 @@
         .note-actions {
             margin-top: 20px;
         }
+        #editTitle, #editCategory {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        #editContent {
+            width: 100%;
+            height: 200px;
+            padding: 8px;
+        }
+        #saveNoteBtn {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -26,6 +39,7 @@
         <div class="note-content" id="noteContent"></div>
         <div class="note-actions">
             <button id="editNoteBtn">Edit</button>
+            <button id="saveNoteBtn">Save</button>
             <button id="deleteNoteBtn">Delete</button>
             <button id="backBtn">Back to Notes</button>
         </div>
