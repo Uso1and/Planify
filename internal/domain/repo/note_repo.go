@@ -9,6 +9,7 @@ import (
 
 type NoteRepoInterface interface {
 	CreateNewNote(c context.Context, note *models.Note) error
+	GetNotesByUserID(c context.Context, userID int) ([]models.Note, error)
 }
 
 type NoteRepo struct {
@@ -24,4 +25,34 @@ func (r *NoteRepo) CreateNewNote(c context.Context, note *models.Note) error {
 
 	return r.db.QueryRowContext(c, query, note.UserID, note.Category, note.Title, note.Content).Scan(&note.ID, &note.CreatedAt, &note.UpdatedAt)
 
+}
+
+func (r *NoteRepo) GetNotesByUserID(c context.Context, userID int) ([]models.Note, error) {
+	query := `SELECT id, category, title, content, created_at, updated_at 
+              FROM notes WHERE user_id = $1 ORDER BY created_at DESC`
+
+	rows, err := r.db.QueryContext(c, query, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var notes []models.Note
+
+	for rows.Next() {
+		var note models.Note
+		note.UserID = userID
+
+		if err := rows.Scan(&note.ID, &note.Category, &note.Title, &note.Content,
+			&note.CreatedAt, &note.UpdatedAt); err != nil {
+			return nil, err
+		}
+		notes = append(notes, note)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return notes, nil
 }

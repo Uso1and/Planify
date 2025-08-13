@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Planify - Main</title>
+    <style>
+        .notes-container {
+            margin-top: 20px;
+        }
+        .note {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
     <h1>Welcome to Planify</h1>
@@ -27,6 +38,11 @@
         </div>
         <button type="submit">Create Note</button>
     </form>
+
+    <h2>Your Notes</h2>
+    <div id="notesContainer" class="notes-container">
+        <!-- Заметки будут загружаться здесь -->
+    </div>
     
     <script src="/static/js/main.js"></script>
 </body>

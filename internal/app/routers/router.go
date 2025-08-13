@@ -10,7 +10,6 @@ import (
 	"planify/internal/domain/config"
 	"planify/internal/domain/infrastructure/database"
 	"planify/internal/domain/repo"
-
 )
 
 func SetupPubRouter() *gin.Engine {
@@ -51,8 +50,8 @@ func SetupPubRouter() *gin.Engine {
 	{
 		protected.GET("/main", handlers.MainPageHandler)
 
+		protected.GET("/note", noteHandler.GetNotes)
 		protected.POST("/note", noteHandler.CreateNote)
-
 
 	}
 
