@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-
 )
 
 type ConfigDB struct {
@@ -26,12 +25,12 @@ func LoadConfig() (*ConfigDB, error) {
 	}
 
 	return &ConfigDB{
-		Host:     getEnv("DB_HOST", "localhost"),
-		Port:     getEnv("DB_PORT", "5432"),
-		User:     getEnv("DB_USER", ""),
-		Password: getEnv("DB_PASSWORD", ""),
-		Name:     getEnv("DB_NAME", ""),
-		SSLMode:  getEnv("DB_SSLMode", "disable"),
+		Host:      getEnv("DB_HOST", "localhost"),
+		Port:      getEnv("DB_PORT", "5432"),
+		User:      getEnv("DB_USER", ""),
+		Password:  getEnv("DB_PASSWORD", ""),
+		Name:      getEnv("DB_NAME", ""),
+		SSLMode:   getEnv("DB_SSLMode", "disable"),
 		JWTSecret: getEnv("JWT_SECRET", "default-secret-key"),
 	}, nil
 }
