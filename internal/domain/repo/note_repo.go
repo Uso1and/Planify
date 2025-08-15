@@ -86,13 +86,38 @@ func (r *NoteRepo) GetNoteByID(c context.Context, id int, userID int) (*models.N
 
 func (r *NoteRepo) UpdateNote(c context.Context, note *models.Note) error {
 	query := `UPDATE notes SET category=$1, title=$2, content=$3, updated_at=NOW() WHERE id=$4 AND user_id=$5`
-	_, err := r.db.ExecContext(c, query, note.Category, note.Title, note.Content, note.ID, note.UserID)
-	return err
+	result, err := r.db.ExecContext(c, query, note.Category, note.Title, note.Content, note.ID, note.UserID)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return sql.ErrNoRows
+	}
+
+	return nil
 }
 
 func (r *NoteRepo) DeleteNote(c context.Context, noteID, userID int) error {
 	query := `DELETE FROM notes WHERE id=$1 AND user_id=$2`
+	result, err := r.db.ExecContext(c, query, noteID, userID)
+	if err != nil {
+		return err
+	}
 
-	_, err := r.db.ExecContext(c, query, noteID, userID)
-	return err
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return sql.ErrNoRows
+	}
+
+	return nil
 }
